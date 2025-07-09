@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Persian World War - Middle East Map</title>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+  crossorigin=""
+/>
+
+<style>
+  body { margin: 0; padding: 0; font-family: Tahoma, sans-serif; background-color: #2E2E2E; color: #EEE; }
+  #map { height: 70vh; width: 100%; }
+  .info-panel { max-width: 900px; margin: 15px auto; background: #383838; border-radius: 8px; padding: 15px; }
+  .info-panel h2 { color: #F44336; margin-top: 0; }
+  button { background-color: #8B0000; color: #EEE; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+  button:hover { background-color: #B22222; }
+</style>
+</head>
+<body>
+<h1 style="text-align:center; color:#F44336;">Persian World War</h1>
+<p style="text-align:center;">نبردی استراتژیک در قلب خاورمیانه</p>
+<div id="map"></div>
+<div class="info-panel" id="info-panel"><h2>لطفا یک کشور را انتخاب کنید</h2></div>
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" crossorigin=""></script>
+<script>
+const countryData = {
+  Iran: { flag: "🇮🇷", resources: { gold: 120 }, forces: { infantry: 50 } },
+  Turkey: { flag: "🇹🇷", resources: { gold: 100 }, forces: { infantry: 40 } },
+  Iraq: { flag: "🇮🇶", resources: { gold: 85 }, forces: { infantry: 25 } }
+};
+let selectedCountry = localStorage.getItem('selectedCountry') || null;
+
+const map = L.map('map').setView([32, 47], 5);
+L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png').addTo(map);
+
+fetch('countries.geojson')
+  .then(res => res.json())
+  .then(data => {
+    const geoLayer = L.geoJSON(data, {
+      style: f => ({ color: '#666', weight: 1, fillOpacity: 0.4 }),
+      onEachFeature: (f, l) => {
+        const key = f.properties.ADMIN.replace(/ /g,'_');
+        l.bindTooltip(f.properties.ADMIN, {permanent:true, direction:'center'});
+        l.on('click', () => {
+          if (selectedCountry && selectedCountry !== key) return alert('شما قبلاً کشوری را انتخاب کرده‌اید.');
+          selectedCountry = key;
+          localStorage.setItem('selectedCountry', key);
+          updateInfo(key);
+        });
+        if (selectedCountry === key) updateInfo(key);
+      }
+    }).addTo(map);
+  });
+
+function updateInfo(key) {
+  const d = countryData[key];
+  if (!d) return;
+  document.getElementById('info-panel').innerHTML = `
+    <h2>${d.flag} ${key}</h2>
+    <p>🪙 طلا: ${d.resources.gold}</p>
+    <p>🪖 پیاده نظام: ${d.forces.infantry}</p>
+  `;
+}
+</script>
+</body>
+</html>
