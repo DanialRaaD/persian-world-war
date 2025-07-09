@@ -1,1 +1,115 @@
-{"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"ADMIN": "Iran"}, "geometry": {"type": "Polygon", "coordinates": [[[44, 37], [63, 37], [63, 25], [44, 25], [44, 37]]]}}, {"type": "Feature", "properties": {"ADMIN": "Turkey"}, "geometry": {"type": "Polygon", "coordinates": [[[26, 42], [45, 42], [45, 36], [26, 36], [26, 42]]]}}, {"type": "Feature", "properties": {"ADMIN": "Iraq"}, "geometry": {"type": "Polygon", "coordinates": [[[38, 38], [49, 38], [49, 29], [38, 29], [38, 38]]]}}]}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>نقشه خاورمیانه تعاملی</title>
+<style>
+  body {
+    font-family: Tahoma, sans-serif;
+    direction: rtl;
+    margin: 20px;
+    background: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  svg {
+    width: 80vw;
+    max-width: 900px;
+    height: auto;
+    border: 2px solid #444;
+    border-radius: 10px;
+    background: white;
+  }
+  path {
+    fill: #b0c4de;
+    stroke: #2c3e50;
+    stroke-width: 1;
+    cursor: pointer;
+    transition: fill 0.3s;
+  }
+  path:hover {
+    fill: #2980b9;
+  }
+  path.selected {
+    fill: #e67e22 !important;
+    stroke: #d35400;
+    stroke-width: 2;
+  }
+  #selectedCountry {
+    margin-top: 20px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #34495e;
+    min-height: 2em;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+
+<svg viewBox="0 0 800 600" aria-label="نقشه تعاملی خاورمیانه" role="img" tabindex="0" >
+
+  <!-- ترکیه -->
+  <path id="turkey" data-name="ترکیه" d="M200,150 L260,130 L300,180 L310,220 L270,230 L220,200 Z" />
+
+  <!-- سوریه -->
+  <path id="syria" data-name="سوریه" d="M270,230 L310,220 L350,260 L320,280 L280,270 Z" />
+
+  <!-- لبنان -->
+  <path id="lebanon" data-name="لبنان" d="M310,220 L320,200 L330,210 L320,230 Z" />
+
+  <!-- عراق -->
+  <path id="iraq" data-name="عراق" d="M350,260 L400,270 L420,310 L390,340 L350,320 Z" />
+
+  <!-- ایران -->
+  <path id="iran" data-name="ایران" d="M420,310 L480,320 L510,360 L480,390 L430,370 L400,350 Z" />
+
+  <!-- عربستان -->
+  <path id="saudi" data-name="عربستان" d="M370,370 L420,400 L430,450 L390,470 L350,430 Z" />
+
+  <!-- کویت -->
+  <path id="kuwait" data-name="کویت" d="M410,300 L420,310 L430,320 L410,320 Z" />
+
+  <!-- اردن -->
+  <path id="jordan" data-name="اردن" d="M310,260 L340,270 L350,290 L320,290 Z" />
+
+  <!-- امارات -->
+  <path id="uae" data-name="امارات" d="M440,390 L460,400 L470,420 L450,430 Z" />
+
+  <!-- قطر -->
+  <path id="qatar" data-name="قطر" d="M430,430 L440,440 L445,450 L435,450 Z" />
+
+  <!-- بحرین -->
+  <path id="bahrain" data-name="بحرین" d="M445,420 L450,425 L455,420 L450,415 Z" />
+
+  <!-- عمان -->
+  <path id="oman" data-name="عمان" d="M470,450 L490,460 L500,480 L480,490 Z" />
+
+  <!-- یمن -->
+  <path id="yemen" data-name="یمن" d="M370,440 L390,460 L400,480 L380,490 Z" />
+
+</svg>
+
+<div id="selectedCountry" aria-live="polite" aria-atomic="true">کشوری انتخاب نشده است</div>
+
+<script>
+  const paths = document.querySelectorAll('svg path');
+  const selectedDisplay = document.getElementById('selectedCountry');
+  let selected = null;
+
+  paths.forEach(path => {
+    path.addEventListener('click', () => {
+      if (selected) {
+        selected.classList.remove('selected');
+      }
+      path.classList.add('selected');
+      selected = path;
+      selectedDisplay.textContent = `کشور انتخاب شده: ${path.getAttribute('data-name')}`;
+    });
+  });
+</script>
+
+</body>
+</html>
